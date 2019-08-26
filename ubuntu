@@ -49,3 +49,9 @@ sudo apt-get install ttf-wqy-microhei  #文泉驿-微米黑
 sudo apt-get install ttf-wqy-zenhei  #文泉驿-正黑
 sudo apt-get install xfonts-wqy #文泉驿-点阵宋体
 
+sudo apt install gnome-tweak-tool
+sudo apt install gnome-shell-extensions
+
+https://extensions.gnome.org/
+
+sudo apt install chrome-gnome-shell 
