@@ -32,3 +32,8 @@ sudo apt-get remove thunderbird totem rhythmbox empathy brasero simple-scan gnom
 
 wps-fonts
 git clone https://github.com/GitHubNull/wps_fonts.git && cd wps_fonts && chmod +x install.sh && ./install.sh
+
+sudo apt-get install ttf-wqy-microhei  #文泉驿-微米黑
+sudo apt-get install ttf-wqy-zenhei  #文泉驿-正黑
+sudo apt-get install xfonts-wqy #文泉驿-点阵宋体
+
