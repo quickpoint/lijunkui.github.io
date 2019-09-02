@@ -1,6 +1,6 @@
-sudo cp /etc/apt/source.list  /etc/apt/source.list.orig
+sudo cp /etc/apt/sources.list  /etc/apt/sources.list.orig
 
-sudo gedit /etc/apt/source.list
+sudo gedit /etc/apt/sources.list
 
 # aliyun
 deb http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse
