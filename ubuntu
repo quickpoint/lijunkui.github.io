@@ -68,4 +68,10 @@ $sudo ntpdate time.windows.com
 $sudo hwclock --localtime --systohc
 重新进入windows10，发现时间恢复正常了！
 
+# ranger
+sudo apt install ranger
+
+sudo apt install python3-pip
+
+pip3 install numpy pandas matplotlib scikit
 
