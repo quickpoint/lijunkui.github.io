@@ -55,3 +55,17 @@ sudo apt install gnome-shell-extensions
 https://extensions.gnome.org/
 
 sudo apt install chrome-gnome-shell 
+
+
+新版本的Ubuntu使用systemd启动之后，时间也改成了由timedatectl来管理，此方法就不适用了。
+$sudo timedatectl set-local-rtc 1
+重启完成将硬件时间UTC改为CST，双系统时间保持一致。
+
+先在ubuntu下更新一下时间，确保时间无误：
+$sudo apt-get install ntpdate
+$sudo ntpdate time.windows.com
+然后将时间更新到硬件上：
+$sudo hwclock --localtime --systohc
+重新进入windows10，发现时间恢复正常了！
+
+
