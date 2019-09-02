@@ -73,5 +73,5 @@ sudo apt install ranger
 
 sudo apt install python3-pip
 
-pip3 install numpy pandas matplotlib scikit
+pip3 install numpy pandas matplotlib scikit-learn
 
