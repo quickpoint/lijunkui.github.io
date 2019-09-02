@@ -75,3 +75,10 @@ sudo apt install python3-pip
 
 pip3 install numpy pandas matplotlib scikit-learn
 
+
+##  vim
+sudo apt rm vim-common
+
+git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+
