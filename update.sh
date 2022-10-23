@@ -72,8 +72,8 @@ func_step_purge() {
 }
 
 func_step_uninstall_dup_image() {
-    sudo dpkg --get-selections | grep linux-image
-    @func_info "sudo apt-get remove --purge linux-image-3.2.2.1-generic"
+    sudo dpkg --get-selections | grep "deinstall" | sed 's/deinstall/\lpurge/' | sudo dpkg --set-selections
+    sudo dpkg -Pa
 }
 
 func_rm_locks_if_exists() {
