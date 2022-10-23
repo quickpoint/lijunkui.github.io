@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 ###########################################################
 # update.sh
 # @author quickpoint
@@ -8,41 +7,113 @@
 # update.sh will update the linux to the lastest version and
 # clean up the additional resources with one click.
 ###########################################################
+set -euo pipefail
+shopt -s globstar nullglob extglob
 
-# Defining Colors for text output
-RED='\033[1;31m'
-GRN='\033[1;32m'
-YEL='\033[1;33m'
-BLU='\033[1;34m'
-NC='\033[0m' 
+## @func_color_echo
+## @param color color for the echo text
+## @param prefix prefox for the echo text
+## @param text text for echo
+@func_color_echo() {
+    if (($# != 3)); then
+        echo -e "${FUNCNAME[0]}: <color>  <prefix> <text>."
+        exit 1
+    fi
 
+    local color="$1"
+    local prefix="$2"
+    shift 2
+    local text="$*"
 
-echo "${YEL}--------------- UPDATE ----------------${NC}"
-echo "${YEL}sudo apt-get update...${NC}"
-sudo apt-get update
+    local COLOR_BEGIN="\033[1;"
+    local COLOR_END="\033[0m"
 
-echo "${YEL}sudo apt-get upgrade -y...${NC}"
-sudo apt-get upgrade -y
+    echo -e "${COLOR_BEGIN}${color}m${prefix} ${text}${COLOR_END}"
+}
+export -f @func_color_echo
 
-echo "${YEL}sudo apt-get dist-upgrade -y...${NC}"
-sudo apt-get dist-upgrade -y
+## @func_info
+@func_info() {
+    local GREEN=32
+    @func_color_echo "${GREEN}" "[INFO]" "$*"
+}
+export -f @func_info
 
-echo "${YEL}--------------- CLEAN -----------------${NC}"
-echo "${YEL}sudo apt-get autoremove...${NC}"
-sudo apt-get autoremove
+## @func_warn
+@func_warn() {
+    local YELLOW=33
+    @func_color_echo "${YELLOW}" "[WARN]" "$*"
+}
+export -f @func_warn
 
+## @func_error
+@func_error() {
+    local RED=31
+    @func_color_echo "${RED}" "[ERROR]" "$*"
+}
+export -f @func_error
 
-echo "${YEL}sudo apt-get autoclean...${NC}"
+func_step_run() {
+    if (($# != 2)); then
+        @func_error "${FUNCNAME[0]} <declare><cmd>"
+        exit 1
+    fi
 
-sudo apt-get autoclean
-sudo apt-get clean
+    local declare="$1"
+    shift
+    local cmd="$*"
 
-echo "${YEL}--------------- PURGE -----------------${NC}"
-echo "${YEL}sudo deborphan | xargs sudo apt-get -y remove --purge...${NC}"
-sudo deborphan | xargs sudo apt-get -y remove --purge
+    @func_warn "---------------${declare}---------------"
+    ${cmd}
+}
 
-echo "${YEL}--------------- IMAGE ----------------${NC}"
-echo "${YEL}sudo dpkg --get-selections | grep linux-image...${NC}"
-sudo dpkg --get-selections | grep linux-image
+func_step_purge() {
+    sudo deborphan | xargs sudo apt-get -y remove --purge
+}
 
-echo "sudo apt-get remove --purge linux-image-3.2.2.1-generic"
+func_step_uninstall_dup_image() {
+    sudo dpkg --get-selections | grep linux-image
+    @func_info "sudo apt-get remove --purge linux-image-3.2.2.1-generic"
+}
+
+func_rm_locks_if_exists() {
+    func_rm_apt_locks_if_exists
+    func_rm_dpkg_locks_if_exists
+}
+
+func_rm_apt_locks_if_exists() {
+    local LOCK="/var/lib/apt/lists/lock"
+    func_safe_rm "${LOCK}"
+}
+
+func_rm_dpkg_locks_if_exists() {
+    local LOCK_FRONTEND="/var/lib/dpkg/lock-frontend"
+    func_safe_rm "${LOCK_FRONTEND}"
+
+    local LOCK="/var/lib/dpkg/lock"
+    func_safe_rm "${LOCK}"
+}
+
+func_safe_rm() {
+    local target="$*"
+
+    if [[ -f "${target}" ]]; then
+        @func_info "removing ${target}"
+        sudo rm "${target}"
+    fi
+}
+
+func_main() {
+    func_step_run "[INIT]" 'func_rm_locks_if_exists'
+    func_step_run "[UPDATE]" 'sudo apt-get update'
+    func_step_run "[UPDATE]" 'sudo apt-get upgrade -y'
+    func_step_run "[DIST-UPDATE]" 'sudo apt-get dist-upgrade -y'
+    func_step_run "[CLEAN]" 'sudo apt-get autoremove'
+    func_step_run "[CLEAN]" 'sudo apt-get autoclean'
+    func_step_run "[CLEAN]" 'sudo apt-get clean'
+    func_step_run "[PURGE]" 'func_step_purge'
+    func_step_run "[IMAGE]" 'func_step_uninstall_dup_image'
+}
+
+# main script entry.
+func_main "$@"
