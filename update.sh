@@ -72,7 +72,11 @@ func_step_purge() {
 }
 
 func_step_uninstall_dup_image() {
-    sudo dpkg --get-selections | grep "deinstall" | sed 's/deinstall/\lpurge/' | sudo dpkg --set-selections
+    sudo dpkg --get-selections \
+     | grep "deinstall" \
+     | sed 's/deinstall/\lpurge/' \
+     | sudo dpkg --set-selections
+     
     sudo dpkg -Pa
 }
 
@@ -117,3 +121,4 @@ func_main() {
 
 # main script entry.
 func_main "$@"
+
