@@ -8,71 +8,22 @@
 set -euo pipefail
 shopt -s globstar nullglob extglob
 
+###### PATH ######
+curr_dir="$(
+    cd "$(dirname "${BASH_SOURCE[0]}")"
+    pwd -P
+)"
+
 ###### IMPORTS ######
-source "common.sh"
+#shellcheck source=/dev/null
+source "${curr_dir}/common.sh"
+#shellcheck source=/dev/null
+source "${curr_dir}/apt_commands.sh"
+#shellcheck source=/dev/null
+source "${curr_dir}/patch_factory.sh"
 
 ###### CONSTANTS ######
-APT_SOURCES_LIST="/etc/apt/sources.list"
-ALIYUN_MIRROR_KEY="mirrors.aliyun.com"
 SOFTWARE="/media/quickpoint/resource/linuxsf"
-
-func_apt_sources_backup() {
-    @func_warn "Backup ${APT_SOURCES_LIST}..."
-
-    local target="${APT_SOURCES_LIST}.orig"
-
-    sudo cp "${APT_SOURCES_LIST}" "${target}"
-
-    @func_warn "Backup ${APT_SOURCES_LIST}...Done."
-}
-
-func_apt_switch() {
-
-    if @func_file_not_exists "${APT_SOURCES_LIST}"; then
-        @func_warn "${APT_SOURCES_LIST} does not exist, touch one."
-        sudo touch "${APT_SOURCES_LIST}"
-    fi
-
-    if @func_file_contains "${APT_SOURCES_LIST}" "${ALIYUN_MIRROR_KEY}"; then
-        @func_warn "Already switched to aliyun mirror."
-        return 0
-    fi
-
-    func_apt_sources_backup
-
-    @func_warn "Switch to aliyun mirror..."
-
-    local ALIYUN_MIRROR="aliyun.sources.list"
-    if @func_file_not_exists "${ALIYUN_MIRROR}"; then
-        func_apt_format_template "${ALIYUN_MIRROR}"
-    fi
-
-    sudo cp "${ALIYUN_MIRROR}" "${APT_SOURCES_LIST}"
-
-    @func_warn "Switch to aliyun mirror...Done."
-
-    func_apt_source_refresh
-    return 0
-}
-
-func_apt_format_template() {
-    cat >"$1" <<EOF
-deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse
-#deb-src http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ jammy-security main restricted universe multiverse
-#deb-src http://mirrors.aliyun.com/ubuntu/ jammy-security main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ jammy-updates main restricted universe multiverse
-#deb-src http://mirrors.aliyun.com/ubuntu/ jammy-updates main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ jammy-proposed main restricted universe multiverse
-#deb-src http://mirrors.aliyun.com/ubuntu/ jammy-proposed main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted universe multiverse
-#deb-src http://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted universe multiverse    
-EOF
-}
-
-func_apt_source_refresh() {
-    sudo apt-get update
-}
 
 func_install_input_method() {
 
@@ -127,45 +78,6 @@ func_fix_netease_music() {
     sudo apt-get install libcanberra-gtk-module
 
     @func_info "Fixing ${MUSIC}...Done"
-}
-
-func_patch_on_line() {
-
-    local patch="$1"
-    local line_no="$2"
-    local patch_line="$3"
-    local target="$4"
-
-    local i=0
-    local line=""
-    IFS=$'\n'
-    while read -r line; do
-        i=$((i + 1))
-        if ((i == line_no)); then
-            echo "${patch_line}" >>"${patch}"
-        fi
-        echo "${line}" >>"${patch}"
-    done <"${target}"
-
-    sudo mv "${patch}" "${target}"
-}
-
-func_patch_on_key() {
-    local patch="$1"
-    local key="$2"
-    local patch_line="$3"
-    local target="$4"
-
-    local line=""
-    IFS=$'\n'
-    while read -r line; do
-        echo "${line}" >>"${patch}"
-        if @func_str_regex_like "${line}" "${key}"; then
-            echo "${patch_line}" >>"${patch}"
-        fi
-    done <"${target}"
-
-    sudo mv "${patch}" "${target}"
 }
 
 func_install_tools() {
@@ -227,7 +139,7 @@ func_install_google_chrome() {
     wget -q -O - https://dl.google.com/linux/linux_signing_key.pub |
         sudo apt-key add -
 
-    func_apt_source_refresh
+    func_apt_get_update
 
     sudo apt install google-chrome-stable
 
@@ -405,35 +317,4 @@ func_pre_install_check() {
     return 1
 }
 
-func_step_run() {
-    if (($# != 2)); then
-        @func_error "${FUNCNAME[0]} <declare><cmd>"
-        exit 1
-    fi
 
-    local declare="$1"
-    shift
-    local cmd="$*"
-
-    @func_warn "---------------${declare}---------------"
-    ${cmd}
-}
-
-func_main() {
-    func_step_run "[APT SWITCH]" 'func_apt_switch'
-    func_step_run "[INSTALL TOOLS]" 'func_install_tools'
-    func_step_run "[INSTALL VIM]" 'func_install_vim'
-    func_step_run "[INSTALL CHROME]" 'func_install_google_chrome'
-    func_step_run "[INSTALL VSCODE]" 'func_install_vscode'
-    func_step_run "[INSTALL IM]" 'func_install_input_method'
-    func_step_run "[INSTALL DEB]" 'func_install_deb_software'
-    #func_step_run "[INSTALL FONTS]" 'func_install_fonts'
-
-    func_step_run "[INSTALL JAVA]" 'func_install_java'
-    func_step_run "[INSTALL MAVEN]" 'func_install_maven'
-    func_step_run "[INSTALL PYTHON]" 'func_install_python'
-    func_step_run "[INSTALL IDEA]" 'func_install_idea'
-
-}
-
-func_main "$@"

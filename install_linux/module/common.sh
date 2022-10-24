@@ -442,7 +442,6 @@ export -f @func_file_contains
 }
 export -f @func_file_not_contains
 
-
 @func_file_real_execute_path() {
 
     local command="$1"
@@ -535,5 +534,3 @@ export -f @func_command_in_path
     ! @func_command_in_path "$@"
 }
 export -f @func_command_not_in_path
-
-
