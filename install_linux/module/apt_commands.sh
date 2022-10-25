@@ -9,14 +9,14 @@ set -euo pipefail
 shopt -s globstar nullglob extglob
 
 ###### PATH ######
-curr_dir="$(
+module_apt_commands_dir="$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     pwd -P
 )"
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${curr_dir}/common.sh"
+source "${module_apt_commands_dir}/../common/common.sh"
 
 func_step_run() {
     if (($# != 2)); then

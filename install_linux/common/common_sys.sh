@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# @(#) common.sh
+# @(#) common_file.sh
 #
 # @author: quickpoint
 # @version: 1.0 2022-10-11
@@ -18,21 +18,26 @@
 set -euo pipefail
 shopt -s globstar nullglob extglob
 
-###### PATH ######
-curr_dir="${PWD##*/}"
-common_dir="${curr_dir}/../common"
+@func_sys_is_mac_os() {
+    [[ "${OSTYPE}" = "darwin"* ]]
+}
+export -f @func_sys_is_mac_os
 
-###### IMPORTS ######
-#shellcheck source=/dev/null
-source "${common_dir}/common.sh"
+@func_sys_is_windows_os() {
+    [[ "${OSTYPE}" = "cygwin" ]] || [[ "${OSTYPE}" = "msys" ]]
+}
+export -f @func_sys_is_windows_os
 
-test_sys_now() {
+@func_sys_is_linux_os() {
+    [[ "${OSTYPE}" = "linux-gnu" ]]
+}
+export -f @func_sys_is_linux_os
+
+@func_sys_now() {
     local now
-    now="$(@func_sys_now)"
+
+    now="$(date "+%Y-%m-%d %H:%M:%S")"
 
     echo "${now}"
 }
-
-if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    test_sys_now
-fi
+export -f @func_sys_now

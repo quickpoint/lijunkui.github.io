@@ -19,20 +19,26 @@ set -euo pipefail
 shopt -s globstar nullglob extglob
 
 ###### PATH ######
-curr_dir="${PWD##*/}"
-common_dir="${curr_dir}/../common"
+cmomon_common_dir="$(
+    cd "$(dirname "${BASH_SOURCE[0]}")"
+    pwd -P
+)"
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${common_dir}/common.sh"
+source "${cmomon_common_dir}/common_str.sh"
 
-test_sys_now() {
-    local now
-    now="$(@func_sys_now)"
+#shellcheck source=/dev/null
+source "${cmomon_common_dir}/common_file.sh"
 
-    echo "${now}"
-}
+#shellcheck source=/dev/null
+source "${cmomon_common_dir}/common_trap.sh"
 
-if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    test_sys_now
-fi
+#shellcheck source=/dev/null
+source "${cmomon_common_dir}/common_sys.sh"
+
+#shellcheck source=/dev/null
+source "${cmomon_common_dir}/common_echo.sh"
+
+#shellcheck source=/dev/null
+source "${cmomon_common_dir}/common_command.sh"

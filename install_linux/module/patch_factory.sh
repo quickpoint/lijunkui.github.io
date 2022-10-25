@@ -9,14 +9,14 @@ set -euo pipefail
 shopt -s globstar nullglob extglob
 
 ###### PATH ######
-curr_dir="$(
+module_patch_factory_dir="$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     pwd -P
 )"
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${curr_dir}/common.sh"
+source "${module_patch_factory_dir}/../common/common.sh"
 
 func_patch_on_line() {
 

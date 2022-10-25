@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# @(#) common.sh
+# @(#) common_file.sh
 #
 # @author: quickpoint
 # @version: 1.0 2022-10-11
@@ -18,21 +18,12 @@
 set -euo pipefail
 shopt -s globstar nullglob extglob
 
-###### PATH ######
-curr_dir="${PWD##*/}"
-common_dir="${curr_dir}/../common"
-
-###### IMPORTS ######
-#shellcheck source=/dev/null
-source "${common_dir}/common.sh"
-
-test_sys_now() {
-    local now
-    now="$(@func_sys_now)"
-
-    echo "${now}"
+@func_command_in_path() {
+    command -v "$@"
 }
+export -f @func_command_in_path
 
-if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    test_sys_now
-fi
+@func_command_not_in_path() {
+    ! @func_command_in_path "$@"
+}
+export -f @func_command_not_in_path

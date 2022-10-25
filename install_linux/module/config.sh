@@ -9,34 +9,32 @@ set -euo pipefail
 shopt -s globstar nullglob extglob
 
 ###### PATH ######
-curr_dir="$(
+module_config_dir="$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     pwd -P
 )"
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${curr_dir}/common.sh"
+source "${module_config_dir}/../common/common.sh"
+
 #shellcheck source=/dev/null
-source "${curr_dir}/apt_commands.sh"
+source "${module_config_dir}/patch_factory.sh"
+
 #shellcheck source=/dev/null
-source "${curr_dir}/patch_factory.sh"
+source "${module_config_dir}/apt_commands.sh"
+
+#shellcheck source=/dev/null
+source "${module_config_dir}/install_base.sh"
+
+#shellcheck source=/dev/null
+source "${module_config_dir}/install_fonts.sh"
+
+#shellcheck source=/dev/null
+source "${module_config_dir}/install_input_method.sh"
 
 ###### CONSTANTS ######
-SOFTWARE="/media/quickpoint/resource/linuxsf"
-
-func_install_input_method() {
-
-    local COMMAND="fcitx"
-
-    func_pre_install_check "${COMMAND}" && return
-
-    @func_info "Installing ${COMMAND}..."
-
-    sudo apt-get install fcitx fcitx-googlepinyin im-config
-
-    @func_info "Installing ${COMMAND}...Done"
-}
+declare -gr SOFTWARE="/media/quickpoint/resource/linuxsf"
 
 func_install_deb_software() {
 
@@ -51,23 +49,23 @@ func_install_deb_software() {
 }
 
 func_install_netease_music() {
+    local file="$1"
+    shift
 
-    local COMMAND="netease-cloud-music"
+    declare -r COMMAND="netease-cloud-music"
 
-    func_pre_install_check "${COMMAND}" && return
-
-    sudo dpkg -i "$*" && func_fix_netease_music
+    func_dpkg_install "${COMMAND}" "${file}" && func_fix_netease_music
 }
 
 func_fix_netease_music() {
 
-    local MUSIC="netease-cloud-music"
+    declare -r MUSIC="netease-cloud-music"
 
     @func_info "Fixing ${MUSIC}..."
 
     local NETEASE="/opt/netease/netease-cloud-music/netease-cloud-music.bash"
 
-    local patch="netease.music.patch.bash"
+    declare -r patch="netease.music.patch.bash"
     local patch_line="cd /lib/x86_64-linux-gnu/"
     local line_no=2
 
@@ -80,46 +78,20 @@ func_fix_netease_music() {
     @func_info "Fixing ${MUSIC}...Done"
 }
 
-func_install_tools() {
-    declare -a tools=(git curl)
-
-    for each in "${tools[@]}"; do
-
-        if @func_command_in_path "${each}"; then
-            @func_warn "${each} has already been installed."
-        else
-            @func_info "Installing ${each}..."
-            sudo apt-get install "${each}"
-            @func_info "Installing ${each}...Done"
-        fi
-    done
-}
-
-func_install_fonts() {
-
-    @func_info "Instaling fonts..."
-
-    git clone https://github.com/GitHubNull/wps_fonts.git &&
-        cd wps_fonts &&
-        chmod +x install.sh &&
-        ./install.sh
-
-    sudo apt-get install ttf-wqy-microhei
-    sudo apt-get install ttf-wqy-zenhei
-    sudo apt-get install xfonts-wqy
-
-    @func_info "Installing fonts...Done"
+func_install_download_tools() {
+    func_install_tools "git" "curl"
 }
 
 func_install_vim() {
 
-    local COMMAND="vim"
+    declare -r COMMAND="vim"
 
     func_pre_install_check "${COMMAND}" && return
 
     @func_info "Installing ${COMMAND}..."
 
     sudo apt install vim neovim
+
     curl -sLf https://spacevim.org/cn/install.sh | bash
 
     @func_info "intalling ${COMMAND}...Done"
@@ -127,7 +99,7 @@ func_install_vim() {
 
 func_install_google_chrome() {
 
-    local COMMAND="google-chrome"
+    declare -r COMMAND="google-chrome"
 
     func_pre_install_check "${COMMAND}" && return
 
@@ -141,13 +113,15 @@ func_install_google_chrome() {
 
     func_apt_get_update
 
-    sudo apt install google-chrome-stable
+    declare -r SOFTWARE="google-chrome-stable"
+
+    func_apt_install "${COMMAND}" "${SOFTWARE}"
 
     @func_info "Installing ${COMMAND}...Done"
 }
 
 func_install_vscode() {
-    local COMMAND="code"
+    declare -r COMMAND="code"
 
     func_pre_install_check "${COMMAND}" && return
 
@@ -173,16 +147,14 @@ func_install_vscode() {
 
 func_install_java() {
 
-    local COMMAND="java"
+    declare -r COMMAND="java"
 
     func_pre_install_check "${COMMAND}" && return
 
     declare -a PACKAGES=(default-jdk default-jdk-doc)
 
     for each in "${PACKAGES[@]}"; do
-        @func_info "Installing ${each}..."
-        sudo apt-get install -y "${each}"
-        @func_info "Installing ${each}...Done"
+        func_apt_install "${COMMAND}" "${each}"
     done
 
     func_config_java
@@ -202,7 +174,7 @@ func_config_java() {
 }
 
 func_install_maven() {
-    local COMMAND="mvn"
+    declare -r COMMAND="mvn"
 
     func_pre_install_check "${COMMAND}" && return
 
@@ -251,6 +223,7 @@ func_config_if_not_exists() {
     local file="$1"
     local key="$2"
     local value="$3"
+    shift 3
 
     if @func_file_not_exists "${file}"; then
         @func_warn "configure ${file} does not exists."
@@ -270,16 +243,14 @@ func_config_if_not_exists() {
 
 func_install_python() {
 
-    local COMMAND="pip3"
+    declare -r COMMAND="pip3"
 
     func_pre_install_check "${COMMAND}" && return
 
     declare -a PACKAGES=(python3-pip)
 
     for each in "${PACKAGES[@]}"; do
-        @func_info "Installing ${each}..."
-        sudo apt-get install -y "${each}"
-        @func_info "Installing ${each}...Done"
+        func_apt_install "${each}"
     done
 
     @func_info "Installing poetry..."
@@ -290,31 +261,15 @@ func_install_python() {
         jupyter black autopep8 isort pytest pylint flake8 mypy)
 
     for each in "${PIP3_PACKAGES[@]}"; do
-        @func_info "Installing ${each}..."
-        pip3 install "${each}"
-        @func_info "Installing ${each}...Done"
+        func_pip3_install "${each}"
     done
 }
 
 func_install_idea() {
 
-    local COMMAND="intellij-idea-community"
+    declare -r COMMAND="intellij-idea-community"
 
     func_pre_install_check "${COMMAND}" && return
 
     sudo snap install "${COMMAND}"
 }
-
-func_pre_install_check() {
-
-    local COMMAND="$1"
-
-    if @func_command_in_path "${COMMAND}"; then
-        @func_warn "${COMMAND} has already been installed."
-        return 0
-    fi
-
-    return 1
-}
-
-

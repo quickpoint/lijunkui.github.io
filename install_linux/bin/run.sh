@@ -9,23 +9,24 @@ set -euo pipefail
 shopt -s globstar nullglob extglob
 
 ###### PATH ######
-curr_dir="$(
+bin_run_dir="$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     pwd -P
 )"
-module_dir="${curr_dir}/../module"
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${module_dir}/config.sh"
+source "${bin_run_dir}/../module/config.sh"
 #shellcheck source=/dev/null
-source "${module_dir}/apt_sources_switcher.sh"
+source "${bin_run_dir}/../module/apt_sources_switcher.sh"
 #shellcheck source=/dev/null
-source "${module_dir}/apt_commands.sh"
+source "${bin_run_dir}/../module/apt_commands.sh"
+#shellcheck source=/dev/null
+source "${bin_run_dir}/../module/patch_factory.sh"
 
 func_main() {
     func_step_run "[APT SWITCH]" 'func_apt_sources_switch'
-    func_step_run "[INSTALL TOOLS]" 'func_install_tools'
+    func_step_run "[INSTALL TOOLS]" 'func_install_download_tools'
     func_step_run "[INSTALL VIM]" 'func_install_vim'
     func_step_run "[INSTALL CHROME]" 'func_install_google_chrome'
     func_step_run "[INSTALL VSCODE]" 'func_install_vscode'

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# @(#) common.sh
+# @(#) common_file.sh
 #
 # @author: quickpoint
 # @version: 1.0 2022-10-11
@@ -18,191 +18,18 @@
 set -euo pipefail
 shopt -s globstar nullglob extglob
 
-# ----------------------------
-@func_error_exit() {
-    local JOB="$0"      # job name
-    local LASTLINE="$1" # line of error occurrence
-    local LASTERR="$2"  # error code
-    shift 2
+###### PATH ######
+common_common_file_dir="$(
+    cd "$(dirname "${BASH_SOURCE[0]}")"
+    pwd -P
+)"
 
-    echo -e "ERROR in ${JOB} : line ${LASTLINE} with exit code ${LASTERR}"
-}
-trap '@func_error_exit ${LINENO} ${?}' ERR
+###### IMPORTS ######
+#shellcheck source=/dev/null
+source "${common_common_file_dir}/common_echo.sh"
 
-# ----------------------------
-
-@func_is_mac_os() {
-    [[ "${OSTYPE}" = "darwin"* ]]
-}
-export -f @func_is_mac_os
-
-@func_is_windows_os() {
-    [[ "${OSTYPE}" = "cygwin" ]] || [[ "${OSTYPE}" = "msys" ]]
-}
-export -f @func_is_windows_os
-
-@func_is_linux_os() {
-    [[ "${OSTYPE}" = "linux-gnu" ]]
-}
-export -f @func_is_linux_os
-
-# ----------------------------
-## @func_color_echo
-## @param color color for the echo text
-## @param prefix prefox for the echo text
-## @param text text for echo
-@func_color_echo() {
-    if (($# != 3)); then
-        echo -e "${FUNCNAME[0]}: <color>  <prefix> <text>."
-        exit 1
-    fi
-
-    local color="$1"
-    local prefix="$2"
-    shift 2
-    local text="$*"
-
-    local COLOR_BEGIN="\033[1;"
-    local COLOR_END="\033[0m"
-
-    echo -e "${COLOR_BEGIN}${color}m${prefix} ${text}${COLOR_END}"
-}
-export -f @func_color_echo
-
-## @func_info
-@func_info() {
-    local GREEN=32
-    @func_color_echo "${GREEN}" "[INFO]" "$*"
-}
-export -f @func_info
-
-## @func_warn
-@func_warn() {
-    local YELLOW=33
-    @func_color_echo "${YELLOW}" "[WARN]" "$*"
-}
-export -f @func_warn
-
-## @func_error
-@func_error() {
-    local RED=31
-    @func_color_echo "${RED}" "[ERROR]" "$*"
-}
-export -f @func_error
-
-# ----------------------------
-
-# is string empty?
-# $1) string
-@func_str_is_empty() {
-    (($# != 1)) && {
-        @func_error "${FUNCNAME[0]}: <string>"
-        exit 1
-    }
-
-    local var="$1"
-    shift
-
-    [[ -z "${var}" ]]
-}
-export -f @func_str_is_empty
-
-# is string not empty?
-# $1) string
-@func_str_is_not_empty() {
-    (($# != 1)) && {
-        @func_error "${FUNCNAME[0]}: <string>"
-        exit 1
-    }
-
-    local var="$1"
-    shift
-
-    [[ -n "${var}" ]]
-}
-export -f @func_str_is_not_empty
-
-# trim the string
-# $1) string
-@func_str_trim() {
-    (($# != 1)) && {
-        @func_error "${FUNCNAME[0]}: <string>"
-        exit 1
-    }
-
-    : "${1#"${1%%[![:space:]]*}"}"
-    : "${_%"${_##*[![:space:]]}"}"
-    printf '%s\n' "$_"
-
-    return 0
-}
-export -f @func_str_trim
-
-# does the two strings equal to each other?
-# $1) string 1
-# $2) string 2
-@func_str_equals() {
-    (($# != 2)) && {
-        @func_error "${FUNCNAME[0]}: <string1> <string2>"
-        exit 1
-    }
-
-    [[ "$1" == "$2" ]]
-}
-export -f @func_str_equals
-
-# does string start with sub_string?
-# $1) string
-# $2) sub_string
-@func_str_starts() {
-    (($# != 2)) && {
-        @func_error "${FUNCNAME[0]}: <string> <substring>"
-        exit 1
-    }
-
-    local var="$1"
-    local sub_string="$2"
-    shift 2
-
-    [[ "${var}" == "${sub_string}"* ]]
-}
-export -f @func_str_starts
-
-# does string end with sub_string?
-# $1) string
-# $2) sub_string
-@func_str_ends() {
-    (($# != 2)) && {
-        @func_error "${FUNCNAME[0]}: <string> <substring>"
-        exit 1
-    }
-
-    local var="$1"
-    local sub_string="$2"
-    shift 2
-
-    [[ "${var}" == *"${sub_string}" ]]
-}
-export -f @func_str_ends
-
-# is string like a regex?
-# $1) string
-# $2) regex
-@func_str_regex_like() {
-    (($# != 2)) && {
-        @func_error "${FUNCNAME[0]}: <string> <regex>"
-        exit 1
-    }
-
-    local var="$1"
-    local regex="$2"
-    shift 2
-
-    [[ "${var}" =~ ${regex} ]]
-}
-export -f @func_str_regex_like
-
-# ----------------------------
+#shellcheck source=/dev/null
+source "${common_common_file_dir}/common_str.sh"
 
 # does file exist?
 # $1) file name
@@ -283,9 +110,9 @@ export -f @func_file_is_executable
     shift
 
     local file_sz
-    if @func_is_mac_os; then
+    if @func_sys_is_mac_os; then
         file_sz="$(stat -f "%p" "${filename}")"
-    elif @func_is_linux_os; then
+    elif @func_sys_is_linux_os; then
         file_sz="$(stat -c %s "${filename}")"
     else
         file_sz="$(stat -c %s "${filename}")"
@@ -308,9 +135,9 @@ export -f @func_file_size
 
     local file_digest
 
-    if @func_is_mac_os; then
+    if @func_sys_is_mac_os; then
         file_digest="$(md5 -q "${path_to_file}")"
-    elif @func_is_linux_os; then
+    elif @func_sys_is_linux_os; then
         file_digest="$(md5sum "${path_to_file}" | cut -d " " -f 1)"
     else
         file_digest="$(md5sum "${path_to_file}" | cut -d " " -f 1)"
@@ -491,46 +318,3 @@ export -f @func_dir_not_exists
     dirname "${path_to_file}"
 }
 export -f @func_dir_name
-
-# ----------------------------
-
-declare -g CACHE=()
-# cache add
-# $1) path to file
-@func_cache_add() {
-    CACHE[${#CACHE[@]}]="$1"
-}
-export -f @func_cache_add
-
-# destroy the cache
-# Removes all the files in the cache if the file exists.
-@func_cache_destroy() {
-    local file
-    for file in "${CACHE[@]}"; do
-        if @func_file_exists "${file:?}"; then
-            rm -rf "${file:?}"
-        fi
-    done
-
-    unset CACHE
-}
-trap '@func_cache_destroy' EXIT
-
-@func_sys_now() {
-    local now
-
-    now="$(date "+%Y-%m-%d %H:%M:%S")"
-
-    echo "${now}"
-}
-export -f @func_sys_now
-
-@func_command_in_path() {
-    command -v "$@"
-}
-export -f @func_command_in_path
-
-@func_command_not_in_path() {
-    ! @func_command_in_path "$@"
-}
-export -f @func_command_not_in_path

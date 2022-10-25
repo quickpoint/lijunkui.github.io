@@ -9,16 +9,16 @@ set -euo pipefail
 shopt -s globstar nullglob extglob
 
 ###### PATH ######
-curr_dir="$(
+module_apt_sources_switcher_dir="$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     pwd -P
 )"
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${curr_dir}/common.sh"
+source "${module_apt_sources_switcher_dir}/apt_commands.sh"
 #shellcheck source=/dev/null
-source "${curr_dir}/apt_commands.sh"
+source "${module_apt_sources_switcher_dir}/../common/common.sh"
 
 ###### CONSTANTS ######
 APT_SOURCES_LIST="/etc/apt/sources.list"
