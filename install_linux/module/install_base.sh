@@ -48,6 +48,12 @@ func_apt_install() {
 
 }
 
+func_dpkg_install_tools() {
+    for each in "$@"; do
+        func_dpkg_install "${each}"
+    done
+}
+
 func_dpkg_install() {
     local software="$1"
     shift
