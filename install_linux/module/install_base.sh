@@ -22,7 +22,6 @@ source "${module_install_base_dir}/../common/common_command.sh"
 source "${module_install_base_dir}/../common/common_echo.sh"
 
 func_pre_install_check() {
-
     local COMMAND="$1"
 
     if @func_command_in_path "${COMMAND}"; then
@@ -34,7 +33,6 @@ func_pre_install_check() {
 }
 
 func_install_tools() {
-
     for each in "$@"; do
         func_apt_install "${each}"
     done
@@ -54,7 +52,6 @@ func_apt_install() {
         shift 2
     else
         @func_error "too many parameters."
-        return
     fi
 
     if @func_command_in_path "${command}"; then
@@ -80,7 +77,6 @@ func_dpkg_install() {
         shift 2
     else
         @func_error "too many parameters."
-        return
     fi
 
     if @func_command_in_path "${command}"; then
@@ -92,10 +88,28 @@ func_dpkg_install() {
     fi
 }
 
+func_pip3_install_tools() {
+    for each in "$@"; do
+        func_pip3_install "${each}"
+    done
+}
+
 func_pip3_install() {
-    local command="$1"
-    local software="$2"
-    shift 2
+    local command=""
+    local software=""
+
+    if (($# == 1)); then
+        command="$1"
+        software="$1"
+        shift 1
+    elif (($# == 2)); then
+        command="$1"
+        software="$2"
+        shift 2
+    else
+        @func_error "too many parameters."
+        return
+    fi
 
     if @func_command_in_path "${command}"; then
         @func_warn "${command} has already been installed."

@@ -37,7 +37,6 @@ source "${module_config_dir}/install_input_method.sh"
 declare -gr SOFTWARE="/media/quickpoint/resource/linuxsf"
 
 func_install_deb_software() {
-
     local file
     for file in "${SOFTWARE}"/*.deb; do
         @func_info "Installing deb software: ${file}..."
@@ -45,7 +44,41 @@ func_install_deb_software() {
         if @func_str_regex_like "${file}" "netease*"; then
             func_install_netease_music "${file}"
         fi
+
+        if @func_str_regex_like "${file}" "wps*"; then
+            func_install_wps "${file}"
+        fi
+
     done
+
+}
+
+func_install_wps() {
+    local file="$1"
+    shift
+
+    declare -r COMMAND="wps"
+
+    func_pre_install_check "${COMMAND}" && return
+
+    func_dpkg_install "${COMMAND}" "${file}" &&
+        func_install_wps_fonts
+}
+
+func_install_wps_fonts() {
+    declare -r WPS_FONTS_URL="https://github.com/GitHubNull/wps_fonts.git"
+
+    @func_info "Instaling fonts..."
+
+    declare -r WPS_FONTS="wps_fonts"
+
+    if @func_dir_not_exists "${WPS_FONTS}"; then
+        git clone "${WPS_FONTS_URL}"
+    fi
+
+    cd "${WPS_FONTS}" &&
+        chmod +x install.sh &&
+        ./install.sh
 }
 
 func_install_netease_music() {
@@ -54,11 +87,13 @@ func_install_netease_music() {
 
     declare -r COMMAND="netease-cloud-music"
 
-    func_dpkg_install "${COMMAND}" "${file}" && func_fix_netease_music
+    func_pre_install_check "${COMMAND}" && return
+
+    func_dpkg_install "${COMMAND}" "${file}" &&
+        func_fix_netease_music
 }
 
 func_fix_netease_music() {
-
     declare -r MUSIC="netease-cloud-music"
 
     @func_info "Fixing ${MUSIC}..."
@@ -79,11 +114,14 @@ func_fix_netease_music() {
 }
 
 func_install_download_tools() {
-    func_install_tools "git" "curl"
+    declare -a TOOLS=(git curl)
+
+    for each in "${TOOLS[@]}"; do
+        func_apt_install "${each}"
+    done
 }
 
 func_install_vim() {
-
     declare -r COMMAND="vim"
 
     func_pre_install_check "${COMMAND}" && return
@@ -98,7 +136,6 @@ func_install_vim() {
 }
 
 func_install_google_chrome() {
-
     declare -r COMMAND="google-chrome"
 
     func_pre_install_check "${COMMAND}" && return
@@ -146,7 +183,6 @@ func_install_vscode() {
 }
 
 func_install_java() {
-
     declare -r COMMAND="java"
 
     func_pre_install_check "${COMMAND}" && return
@@ -161,7 +197,6 @@ func_install_java() {
 }
 
 func_config_java() {
-
     local real_path
     real_path="$(@func_file_real_execute_path "java")"
 
@@ -187,7 +222,6 @@ func_install_maven() {
 }
 
 func_config_maven_home() {
-
     local real_path
     real_path="$(@func_file_real_execute_path "mvn")"
 
@@ -219,7 +253,6 @@ func_config_maven_mirror() {
 }
 
 func_config_if_not_exists() {
-
     local file="$1"
     local key="$2"
     local value="$3"
@@ -242,7 +275,6 @@ func_config_if_not_exists() {
 }
 
 func_install_python() {
-
     declare -r COMMAND="pip3"
 
     func_pre_install_check "${COMMAND}" && return
@@ -253,20 +285,27 @@ func_install_python() {
         func_apt_install "${each}"
     done
 
-    @func_info "Installing poetry..."
-    curl -sSL https://install.python-poetry.org | python3 -
-    @func_info "Installing poetry...Done"
-
     declare -a PIP3_PACKAGES=(pandas numpy matplotlib scipy sklearn
         jupyter black autopep8 isort pytest pylint flake8 mypy)
 
     for each in "${PIP3_PACKAGES[@]}"; do
         func_pip3_install "${each}"
     done
+
+    func_install_poetry
+}
+
+func_install_poetry() {
+    declare -r COMMAND="poetry"
+
+    func_pre_install_check "${COMMAND}" && return
+
+    @func_info "Installing ${COMMAND}..."
+    curl -sSL https://install.python-poetry.org | python3 -
+    @func_info "Installing ${COMMAND}...Done"
 }
 
 func_install_idea() {
-
     declare -r COMMAND="intellij-idea-community"
 
     func_pre_install_check "${COMMAND}" && return
