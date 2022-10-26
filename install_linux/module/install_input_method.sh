@@ -22,10 +22,9 @@ source "${module_install_input_method_dir}/../common/common_command.sh"
 source "${module_install_input_method_dir}/../common/common_echo.sh"
 
 func_install_input_method() {
-
     declare -r COMMAND="fcitx"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     @func_info "Installing ${COMMAND}..."
 

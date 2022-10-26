@@ -21,7 +21,7 @@ source "${module_install_base_dir}/../common/common_command.sh"
 #shellcheck source=/dev/null
 source "${module_install_base_dir}/../common/common_echo.sh"
 
-func_pre_install_check() {
+func_has_installed() {
     local COMMAND="$1"
 
     if @func_command_in_path "${COMMAND}"; then
@@ -39,53 +39,22 @@ func_install_tools() {
 }
 
 func_apt_install() {
-    local command=""
-    local software=""
+    local software="$1"
+    shift
 
-    if (($# == 1)); then
-        command="$1"
-        software="$1"
-        shift 1
-    elif (($# == 2)); then
-        command="$1"
-        software="$2"
-        shift 2
-    else
-        @func_error "too many parameters."
-    fi
+    @func_info "Installing ${software}..."
+    sudo apt-get install -y "${software}"
+    @func_info "Installing ${software}...Done"
 
-    if @func_command_in_path "${command}"; then
-        @func_warn "${command} has already been installed."
-    else
-        @func_info "Installing ${software}..."
-        sudo apt-get install -y "${software}"
-        @func_info "Installing ${software}...Done"
-    fi
 }
 
 func_dpkg_install() {
-    local command=""
-    local software=""
+    local software="$1"
+    shift
 
-    if (($# == 1)); then
-        command="$1"
-        software="$1"
-        shift 1
-    elif (($# == 2)); then
-        command="$1"
-        software="$2"
-        shift 2
-    else
-        @func_error "too many parameters."
-    fi
-
-    if @func_command_in_path "${command}"; then
-        @func_warn "${command} has already been installed."
-    else
-        @func_info "Installing ${software}..."
-        sudo dpkg -i "${software}"
-        @func_info "Installing ${software}...Done"
-    fi
+    @func_info "Installing ${software}..."
+    sudo dpkg -i "${software}"
+    @func_info "Installing ${software}...Done"
 }
 
 func_pip3_install_tools() {
@@ -95,27 +64,10 @@ func_pip3_install_tools() {
 }
 
 func_pip3_install() {
-    local command=""
-    local software=""
+    local software="$1"
+    shift
 
-    if (($# == 1)); then
-        command="$1"
-        software="$1"
-        shift 1
-    elif (($# == 2)); then
-        command="$1"
-        software="$2"
-        shift 2
-    else
-        @func_error "too many parameters."
-        return
-    fi
-
-    if @func_command_in_path "${command}"; then
-        @func_warn "${command} has already been installed."
-    else
-        @func_info "Installing ${software}..."
-        pip3 install "${software}"
-        @func_info "Installing ${software}...Done"
-    fi
+    @func_info "Installing ${software}..."
+    pip3 install "${software}"
+    @func_info "Installing ${software}...Done"
 }

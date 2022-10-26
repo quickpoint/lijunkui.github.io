@@ -59,7 +59,7 @@ func_install_wps() {
 
     declare -r COMMAND="wps"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     func_dpkg_install "${COMMAND}" "${file}" &&
         func_install_wps_fonts
@@ -87,7 +87,7 @@ func_install_netease_music() {
 
     declare -r COMMAND="netease-cloud-music"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     func_dpkg_install "${COMMAND}" "${file}" &&
         func_fix_netease_music
@@ -117,14 +117,20 @@ func_install_download_tools() {
     declare -a TOOLS=(git curl)
 
     for each in "${TOOLS[@]}"; do
+
+        if func_has_installed "${each}"; then
+            continue
+        fi
+
         func_apt_install "${each}"
+        
     done
 }
 
 func_install_vim() {
     declare -r COMMAND="vim"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     @func_info "Installing ${COMMAND}..."
 
@@ -138,7 +144,7 @@ func_install_vim() {
 func_install_google_chrome() {
     declare -r COMMAND="google-chrome"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     @func_info "Installing ${COMMAND}..."
 
@@ -160,7 +166,7 @@ func_install_google_chrome() {
 func_install_vscode() {
     declare -r COMMAND="code"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     @func_info "Installing ${COMMAND}..."
 
@@ -185,7 +191,7 @@ func_install_vscode() {
 func_install_java() {
     declare -r COMMAND="java"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     declare -a PACKAGES=(default-jdk default-jdk-doc)
 
@@ -211,7 +217,7 @@ func_config_java() {
 func_install_maven() {
     declare -r COMMAND="mvn"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     @func_info "Installing ${COMMAND}..."
     sudo apt-get install -y maven
@@ -277,7 +283,7 @@ func_config_if_not_exists() {
 func_install_python() {
     declare -r COMMAND="pip3"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     declare -a PACKAGES=(python3-pip)
 
@@ -298,7 +304,7 @@ func_install_python() {
 func_install_poetry() {
     declare -r COMMAND="poetry"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     @func_info "Installing ${COMMAND}..."
     curl -sSL https://install.python-poetry.org | python3 -
@@ -308,7 +314,7 @@ func_install_poetry() {
 func_install_idea() {
     declare -r COMMAND="intellij-idea-community"
 
-    func_pre_install_check "${COMMAND}" && return
+    func_has_installed "${COMMAND}" && return
 
     sudo snap install "${COMMAND}"
 }
