@@ -274,7 +274,7 @@ export -f @func_file_not_contains
     local command="$1"
 
     local whichone
-    whichone="$(which ${command})"
+    whichone="$(which "${command}")"
 
     readlink -f "${whichone}"
 }
