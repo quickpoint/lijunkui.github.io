@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ###########################################################
-# @(#) install_input_method.sh
+# @(#) install_base.sh
 # @author quickpoint
 # @version 1.0 2019-07-20
 #

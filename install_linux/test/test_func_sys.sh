@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# @(#) common.sh
+# @(#) test_func_sys.sh
 #
 # @author: quickpoint
 # @version: 1.0 2022-10-11

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# @(#) common_file.sh
+# @(#) common_command.sh
 #
 # @author: quickpoint
 # @version: 1.0 2022-10-11

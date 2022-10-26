@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# @(#) common_trap.sh
+# @(#) common_str.sh
 #
 # @author: quickpoint
 # @version: 1.0 2022-10-11
