@@ -89,6 +89,6 @@ func_snap_install() {
     shift
 
     @func_info "Installing ${software}..."
-    sudo snap install "${software}"
+    sudo snap install "${software}" --classic
     @func_info "Installing ${software}...Done"
 }

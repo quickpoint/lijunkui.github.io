@@ -38,6 +38,7 @@ func_main() {
     func_step_run "[INSTALL MAVEN]" 'func_install_maven'
     func_step_run "[INSTALL PYTHON]" 'func_install_python'
     func_step_run "[INSTALL IDEA]" 'func_install_idea'
+    func_step_run "[INSTALL PYCHARM]" 'func_install_pycharm'
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then

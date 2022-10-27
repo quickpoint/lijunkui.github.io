@@ -116,7 +116,7 @@ func_fix_netease_music() {
 }
 
 func_install_download_tools() {
-    declare -a TOOLS=(git curl)
+    declare -a TOOLS=(git curl snap)
 
     for each in "${TOOLS[@]}"; do
 
@@ -316,6 +316,14 @@ func_install_poetry() {
 
 func_install_idea() {
     declare -r COMMAND="intellij-idea-community"
+
+    func_has_installed "${COMMAND}" && return
+
+    func_snap_install "${COMMAND}"
+}
+
+func_install_pycharm() {
+    declare -r COMMAND="pycharm-community"
 
     func_has_installed "${COMMAND}" && return
 

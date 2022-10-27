@@ -70,12 +70,12 @@ func_apt_get_uninstall_dup_images() {
 
 func_apt_get_do_uninstall_dup_images() {
 
-    sudo dpkg --get-selections \
-        | grep "deinstall" \
-        | sed 's/deinstall/\lpurge/' \
-        | sudo dpkg --set-selections \
-        && sudo dpkg -Pa
-    
+    sudo dpkg --get-selections |
+        grep "deinstall" |
+        sed 's/deinstall/\lpurge/' |
+        sudo dpkg --set-selections &&
+        sudo dpkg -Pa
+
     return 0
 }
 
