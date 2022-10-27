@@ -22,10 +22,10 @@ source "${module_install_base_dir}/../common/common_command.sh"
 source "${module_install_base_dir}/../common/common_echo.sh"
 
 func_has_installed() {
-    local COMMAND="$1"
+    local command="$1"
 
-    if @func_command_in_path "${COMMAND}"; then
-        @func_warn "${COMMAND} has already been installed."
+    if @func_command_in_path "${command}"; then
+        @func_warn "${command} has already been installed."
         return 0
     fi
 
@@ -75,5 +75,20 @@ func_pip3_install() {
 
     @func_info "Installing ${software}..."
     pip3 install "${software}"
+    @func_info "Installing ${software}...Done"
+}
+
+func_snap_install_tools() {
+    for each in "$@"; do
+        func_snap_install "${each}"
+    done
+}
+
+func_snap_install() {
+    local software="$1"
+    shift
+
+    @func_info "Installing ${software}..."
+    sudo snap install "${software}"
     @func_info "Installing ${software}...Done"
 }

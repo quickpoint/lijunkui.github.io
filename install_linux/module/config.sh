@@ -43,14 +43,16 @@ func_install_deb_software() {
 
         if @func_str_regex_like "${file}" "netease*"; then
             func_install_netease_music "${file}"
+            continue
         fi
 
         if @func_str_regex_like "${file}" "wps*"; then
             func_install_wps "${file}"
+            continue
         fi
 
+        func_dpkg_install "${file}"
     done
-
 }
 
 func_install_wps() {
@@ -123,7 +125,7 @@ func_install_download_tools() {
         fi
 
         func_apt_install "${each}"
-        
+
     done
 }
 
@@ -276,6 +278,7 @@ func_config_if_not_exists() {
 
     echo "${value}" >>"${file}"
     echo "export PATH=\$PATH:\$${key}" >>"${file}"
+
     #shellcheck source=/dev/null
     source "${file}"
 }
@@ -316,5 +319,5 @@ func_install_idea() {
 
     func_has_installed "${COMMAND}" && return
 
-    sudo snap install "${COMMAND}"
+    func_snap_install "${COMMAND}"
 }
