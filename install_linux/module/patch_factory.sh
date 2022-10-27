@@ -16,7 +16,7 @@ module_patch_factory_dir="$(
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${module_patch_factory_dir}/../common/common.sh"
+source "${module_patch_factory_dir}/../common/common_str.sh"
 
 func_patch_on_line() {
 

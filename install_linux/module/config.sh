@@ -16,7 +16,7 @@ module_config_dir="$(
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${module_config_dir}/../common/common.sh"
+source "${module_config_dir}/../common/imports.sh"
 
 #shellcheck source=/dev/null
 source "${module_config_dir}/patch_factory.sh"

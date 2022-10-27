@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# @(#) common.sh
+# @(#) imports.sh
 #
 # @author: quickpoint
 # @version: 1.0 2022-10-11
@@ -19,26 +19,26 @@ set -euo pipefail
 shopt -s globstar nullglob extglob
 
 ###### PATH ######
-cmomon_common_dir="$(
+cmomon_imports_dir="$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     pwd -P
 )"
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${cmomon_common_dir}/common_str.sh"
+source "${cmomon_imports_dir}/common_str.sh"
 
 #shellcheck source=/dev/null
-source "${cmomon_common_dir}/common_file.sh"
+source "${cmomon_imports_dir}/common_file.sh"
 
 #shellcheck source=/dev/null
-source "${cmomon_common_dir}/common_trap.sh"
+source "${cmomon_imports_dir}/common_trap.sh"
 
 #shellcheck source=/dev/null
-source "${cmomon_common_dir}/common_sys.sh"
+source "${cmomon_imports_dir}/common_sys.sh"
 
 #shellcheck source=/dev/null
-source "${cmomon_common_dir}/common_echo.sh"
+source "${cmomon_imports_dir}/common_echo.sh"
 
 #shellcheck source=/dev/null
-source "${cmomon_common_dir}/common_command.sh"
+source "${cmomon_imports_dir}/common_command.sh"

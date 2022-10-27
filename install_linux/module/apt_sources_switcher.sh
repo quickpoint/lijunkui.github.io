@@ -18,7 +18,7 @@ module_apt_sources_switcher_dir="$(
 #shellcheck source=/dev/null
 source "${module_apt_sources_switcher_dir}/apt_commands.sh"
 #shellcheck source=/dev/null
-source "${module_apt_sources_switcher_dir}/../common/common.sh"
+source "${module_apt_sources_switcher_dir}/../common/imports.sh"
 
 ###### CONSTANTS ######
 APT_SOURCES_LIST="/etc/apt/sources.list"

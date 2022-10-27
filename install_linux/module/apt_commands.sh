@@ -16,7 +16,7 @@ module_apt_commands_dir="$(
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${module_apt_commands_dir}/../common/common.sh"
+source "${module_apt_commands_dir}/../common/imports.sh"
 
 func_step_run() {
     if (($# != 2)); then

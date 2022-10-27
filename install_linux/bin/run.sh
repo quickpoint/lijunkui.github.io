@@ -16,13 +16,7 @@ bin_run_dir="$(
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
-source "${bin_run_dir}/../module/config.sh"
-#shellcheck source=/dev/null
-source "${bin_run_dir}/../module/apt_sources_switcher.sh"
-#shellcheck source=/dev/null
-source "${bin_run_dir}/../module/apt_commands.sh"
-#shellcheck source=/dev/null
-source "${bin_run_dir}/../module/patch_factory.sh"
+source "${bin_run_dir}/../module/imports.sh"
 
 func_main() {
     func_step_run "[APT SWITCH]" 'func_apt_sources_switch'
