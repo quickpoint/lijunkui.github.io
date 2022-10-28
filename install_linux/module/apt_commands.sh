@@ -5,32 +5,22 @@
 # @version 1.0 2019-07-20
 #
 ###########################################################
-set -euo pipefail
-shopt -s globstar nullglob extglob
 
-###### PATH ######
-module_apt_commands_dir="$(
-    cd "$(dirname "${BASH_SOURCE[0]}")"
-    pwd -P
-)"
-
-###### IMPORTS ######
-#shellcheck source=/dev/null
-source "${module_apt_commands_dir}/../common/imports.sh"
-
-func_step_run() {
-    if (($# != 2)); then
-        @func_error "${FUNCNAME[0]} <declare><cmd>"
-        exit 1
-    fi
-
-    local declare="$1"
-    shift
-    local cmd="$*"
-
-    @func_warn "---------------${declare}---------------"
-    ${cmd}
-}
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    ####### SCRIPT EXECUTION CONFIGURATION #######
+    set -euo pipefail
+    shopt -s globstar nullglob extglob
+    
+    ###### PATH ######
+    module_apt_commands_dir="$(
+        cd "$(dirname "${BASH_SOURCE[0]}")"
+        pwd -P
+    )"
+    
+    ###### IMPORTS ######
+    #shellcheck source=/dev/null
+    source "${module_apt_commands_dir}/../common/imports.sh"
+fi
 
 func_apt_get_update() {
     func_step_run "[UPDATE]" 'sudo apt-get update'
@@ -69,13 +59,13 @@ func_apt_get_uninstall_dup_images() {
 }
 
 func_apt_get_do_uninstall_dup_images() {
-
+    
     sudo dpkg --get-selections |
-        grep "deinstall" |
-        sed 's/deinstall/\lpurge/' |
-        sudo dpkg --set-selections &&
-        sudo dpkg -Pa
-
+    grep "deinstall" |
+    sed 's/deinstall/\lpurge/' |
+    sudo dpkg --set-selections &&
+    sudo dpkg -Pa
+    
     return 0
 }
 
@@ -90,7 +80,7 @@ func_apt_get_refresh() {
         func_apt_get_purge
         func_apt_get_uninstall_dup_images
     )
-
+    
     for each in "${COMMANDS[@]}"; do
         ${each}
     done

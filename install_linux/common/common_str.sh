@@ -14,19 +14,21 @@
 #
 ################################################################################
 
-####### SCRIPT EXECUTION CONFIGURATION #######
-set -euo pipefail
-shopt -s globstar nullglob extglob
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    ####### SCRIPT EXECUTION CONFIGURATION #######
+    set -euo pipefail
+    shopt -s globstar nullglob extglob
 
-###### PATH ######
-common_common_str_dir="$(
-    cd "$(dirname "${BASH_SOURCE[0]}")"
-    pwd -P
-)"
+    ###### PATH ######
+    common_common_str_dir="$(
+        cd "$(dirname "${BASH_SOURCE[0]}")"
+        pwd -P
+    )"
 
-###### IMPORTS ######
-#shellcheck source=/dev/null
-source "${common_common_str_dir}/common_echo.sh"
+    ###### IMPORTS ######
+    #shellcheck source=/dev/null
+    source "${common_common_str_dir}/common_echo.sh"
+fi
 
 # is string empty?
 # $1) string

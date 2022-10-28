@@ -14,9 +14,11 @@
 #
 ################################################################################
 
-####### SCRIPT EXECUTION CONFIGURATION #######
-set -euo pipefail
-shopt -s globstar nullglob extglob
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    ####### SCRIPT EXECUTION CONFIGURATION #######
+    set -euo pipefail
+    shopt -s globstar nullglob extglob
+fi
 
 ###### PATH ######
 module_imports_dir="$(
@@ -26,13 +28,22 @@ module_imports_dir="$(
 
 ###### IMPORTS ######
 #shellcheck source=/dev/null
+source "${module_imports_dir}/../common/imports.sh"
+
+#shellcheck source=/dev/null
 source "${module_imports_dir}/apt_commands.sh"
 
 #shellcheck source=/dev/null
 source "${module_imports_dir}/apt_sources_switcher.sh"
 
 #shellcheck source=/dev/null
-source "${module_imports_dir}/config.sh"
+source "${module_imports_dir}/install_and_config_java.sh"
+
+#shellcheck source=/dev/null
+source "${module_imports_dir}/install_and_config_maven.sh"
+
+#shellcheck source=/dev/null
+source "${module_imports_dir}/install_apt_softwares.sh"
 
 #shellcheck source=/dev/null
 source "${module_imports_dir}/install_base.sh"
@@ -41,7 +52,25 @@ source "${module_imports_dir}/install_base.sh"
 source "${module_imports_dir}/install_fonts.sh"
 
 #shellcheck source=/dev/null
+source "${module_imports_dir}/install_google_chrome.sh"
+
+#shellcheck source=/dev/null
 source "${module_imports_dir}/install_input_method.sh"
 
 #shellcheck source=/dev/null
+source "${module_imports_dir}/install_python_related.sh"
+
+#shellcheck source=/dev/null
+source "${module_imports_dir}/install_snap_softwares.sh"
+
+#shellcheck source=/dev/null
+source "${module_imports_dir}/install_vim.sh"
+
+#shellcheck source=/dev/null
+source "${module_imports_dir}/install_vscode.sh"
+
+#shellcheck source=/dev/null
 source "${module_imports_dir}/patch_factory.sh"
+
+#shellcheck source=/dev/null
+source "${module_imports_dir}/install_deb_softwares.sh"

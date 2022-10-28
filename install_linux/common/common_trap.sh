@@ -14,19 +14,22 @@
 #
 ################################################################################
 
-####### SCRIPT EXECUTION CONFIGURATION #######
-set -euo pipefail
-shopt -s globstar nullglob extglob
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 
-###### PATH ######
-common_common_trap_dir="$(
-    cd "$(dirname "${BASH_SOURCE[0]}")"
-    pwd -P
-)"
+    ####### SCRIPT EXECUTION CONFIGURATION #######
+    set -euo pipefail
+    shopt -s globstar nullglob extglob
 
-###### IMPORTS ######
-#shellcheck source=/dev/null
-source "${common_common_trap_dir}/common_file.sh"
+    ###### PATH ######
+    common_common_trap_dir="$(
+        cd "$(dirname "${BASH_SOURCE[0]}")"
+        pwd -P
+    )"
+
+    ###### IMPORTS ######
+    #shellcheck source=/dev/null
+    source "${common_common_trap_dir}/common_file.sh"
+fi
 
 @func_error_exit() {
     local JOB="$0"      # job name
@@ -60,4 +63,3 @@ export -f @func_file_cache_add
 }
 export -f @func_file_cache_destroy
 trap '@func_file_cache_destroy' EXIT
-

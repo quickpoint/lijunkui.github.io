@@ -14,9 +14,11 @@
 #
 ################################################################################
 
-####### SCRIPT EXECUTION CONFIGURATION #######
-set -euo pipefail
-shopt -s globstar nullglob extglob
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    ####### SCRIPT EXECUTION CONFIGURATION #######
+    set -euo pipefail
+    shopt -s globstar nullglob extglob
+fi
 
 ###### PATH ######
 cmomon_imports_dir="$(

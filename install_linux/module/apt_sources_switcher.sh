@@ -5,20 +5,25 @@
 # @version 1.0 2019-07-20
 #
 ###########################################################
-set -euo pipefail
-shopt -s globstar nullglob extglob
 
-###### PATH ######
-module_apt_sources_switcher_dir="$(
-    cd "$(dirname "${BASH_SOURCE[0]}")"
-    pwd -P
-)"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 
-###### IMPORTS ######
-#shellcheck source=/dev/null
-source "${module_apt_sources_switcher_dir}/apt_commands.sh"
-#shellcheck source=/dev/null
-source "${module_apt_sources_switcher_dir}/../common/imports.sh"
+    ####### SCRIPT EXECUTION CONFIGURATION #######
+    set -euo pipefail
+    shopt -s globstar nullglob extglob
+
+    ###### PATH ######
+    module_apt_sources_switcher_dir="$(
+        cd "$(dirname "${BASH_SOURCE[0]}")"
+        pwd -P
+    )"
+
+    ###### IMPORTS ######
+    #shellcheck source=/dev/null
+    source "${module_apt_sources_switcher_dir}/apt_commands.sh"
+    #shellcheck source=/dev/null
+    source "${module_apt_sources_switcher_dir}/../common/imports.sh"
+fi
 
 ###### CONSTANTS ######
 APT_SOURCES_LIST="/etc/apt/sources.list"
