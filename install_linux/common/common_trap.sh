@@ -38,6 +38,22 @@ fi
 }
 trap '@func_error_exit ${LINENO} ${?}' ERR
 
+@func_die() {
+    ret=$?
+    if [ "$ret" != "0" ];then
+        @func_error "in $0, with exit code ${ret}, traceback:";
+        local i=0
+        local size=${#FUNCNAME[@]}
+        local sep=" "
+        for ((i=1; i < size; i++)); do
+            @func_error "${sep}" "func: ${FUNCNAME[$i]}" " line:${BASH_LINENO[$((i-1))]}"
+        done
+        
+        exit $ret;
+    fi
+}
+export -f @func_die
+
 declare -g FILE_CACHE=()
 # cache add
 # $1) path to file

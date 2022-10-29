@@ -26,7 +26,8 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     source "${bin_run_dir}/../module/imports.sh"
     
     func_main() {
-        func_step_run "[APT SWITCH]" 'func_apt_sources_switch'
+        func_step_run "[APT REFRSH]" 'func_apt_get_refresh'
+        #func_step_run "[APT SWITCH]" 'func_apt_sources_switch'
         func_step_run "[INSTALL TOOLS]" 'func_install_apt_softwares'
         func_step_run "[INSTALL VIM]" 'func_install_vim'
         func_step_run "[INSTALL CHROME]" 'func_install_google_chrome'

@@ -26,6 +26,9 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     ###### IMPORTS ######
     #shellcheck source=/dev/null
     source "${module_install_base_dir}/../common/common_command.sh"
+
+    #shellcheck source=/dev/null
+    source "${module_install_base_dir}/../common/common_trap.sh"
     
     #shellcheck source=/dev/null
     source "${module_install_base_dir}/../common/common_echo.sh"
@@ -53,7 +56,9 @@ func_step_run() {
     local cmd="$*"
     
     @func_warn "---------------${declare}---------------"
-    ${cmd}
+    ${cmd} || @func_die
+
+    @func_info "${declare} done"
 }
 
 func_install_tools() {

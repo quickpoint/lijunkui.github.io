@@ -2,9 +2,9 @@
 #
 # @author quickpoint
 # @version 1.0
-# 
+#
 # Copyright (c) 2008-2022, quickpoint.
-# 
+#
 # "THE FRIED-DUMPLING-WARE LICENSE", Version 1.0:
 # Quickpoint wrote this file.  As long as you retain this notice you
 # can do whatever you want with this stuff. If we meet some day, and you think
@@ -42,11 +42,7 @@ export -f @func_sys_is_linux_os
 export -f @func_sys_now
 
 @func_sys_rm() {
-    if @func_sys_is_mac_os; then
-        brew remove "$@"
-    else
-        sudo rm "$@"
-    fi   
+    sudo rm "$@"    
 }
 export -f @func_sys_rm
 
@@ -72,7 +68,7 @@ export -f @func_sys_upgrade
     if @func_sys_is_mac_os; then
         brew upgrade
     else
-        sudo apt-get dist-upgrade -y
+        sudo apt-get -y dist-upgrade
     fi
 }
 export -f @func_sys_dist_upgrade
@@ -81,9 +77,9 @@ export -f @func_sys_dist_upgrade
     if @func_sys_is_mac_os; then
         brew cleanup --force -s
     else
-        sudo apt-get autoclean
-        sudo apt-get autoremove
-        sudo apt-get clean
+        sudo apt-get -y autoclean
+        sudo apt-get -y autoremove
+        sudo apt-get -y clean
     fi
 }
 export -f @func_sys_clean
@@ -92,7 +88,16 @@ export -f @func_sys_clean
     if @func_sys_is_mac_os; then
         brew install "$@"
     else
-        sudo apt-get install -y "$@"
+        sudo apt-get -y install "$@"
     fi
 }
 export -f @func_sys_install
+
+@func_sys_purge() {
+    if @func_sys_is_mac_os; then
+        brew uninstall "$@"
+    else
+        sudo apt-get -y remove --purge "$@"
+    fi
+}
+export -f @func_sys_purge
