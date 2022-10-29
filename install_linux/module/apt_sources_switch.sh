@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 ###########################################################
-# @(#) apt_sources_switcher.sh
+# @(#) apt_sources_switch.sh
 # @author quickpoint
 # @version 1.0 2019-07-20
 #
 ###########################################################
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-
+    
     ####### SCRIPT EXECUTION CONFIGURATION #######
     set -euo pipefail
     shopt -s globstar nullglob extglob
-
+    
     ###### PATH ######
     module_apt_sources_switcher_dir="$(
         cd "$(dirname "${BASH_SOURCE[0]}")"
         pwd -P
     )"
-
+    
     ###### IMPORTS ######
     #shellcheck source=/dev/null
     source "${module_apt_sources_switcher_dir}/apt_commands.sh"
@@ -26,46 +26,46 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 fi
 
 ###### CONSTANTS ######
-APT_SOURCES_LIST="/etc/apt/sources.list"
-ALIYUN_MIRROR_KEY="mirrors.aliyun.com"
+declare -gr APT_SOURCES_LIST="/etc/apt/sources.list"
+declare -gr ALIYUN_MIRROR_KEY="mirrors.aliyun.com"
 
 func_apt_sources_backup() {
     @func_warn "Backup ${APT_SOURCES_LIST}..."
-
+    
     local target="${APT_SOURCES_LIST}.orig"
-
+    
     sudo cp "${APT_SOURCES_LIST}" "${target}"
-
+    
     @func_warn "Backup ${APT_SOURCES_LIST}...Done."
 }
 
 func_apt_sources_switch() {
-
+    
     if @func_file_not_exists "${APT_SOURCES_LIST}"; then
         @func_warn "${APT_SOURCES_LIST} does not exist, touch one."
         sudo touch "${APT_SOURCES_LIST}"
     fi
-
+    
     if @func_file_contains "${APT_SOURCES_LIST}" "${ALIYUN_MIRROR_KEY}"; then
         @func_warn "Already switched to aliyun mirror."
         return 0
     fi
-
+    
     func_apt_sources_backup
-
+    
     @func_warn "Switch to aliyun mirror..."
-
+    
     local ALIYUN_MIRROR="aliyun.sources.list"
     if @func_file_not_exists "${ALIYUN_MIRROR}"; then
         func_apt_sources_format_template "${ALIYUN_MIRROR}"
     fi
-
+    
     sudo cp "${ALIYUN_MIRROR}" "${APT_SOURCES_LIST}"
-
+    
     @func_warn "Switch to aliyun mirror...Done."
-
-    func_apt_get_update
-
+    
+    func_apt_get_refresh
+    
     return 0
 }
 
@@ -80,6 +80,10 @@ deb http://mirrors.aliyun.com/ubuntu/ jammy-updates main restricted universe mul
 deb http://mirrors.aliyun.com/ubuntu/ jammy-proposed main restricted universe multiverse
 #deb-src http://mirrors.aliyun.com/ubuntu/ jammy-proposed main restricted universe multiverse
 deb http://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted universe multiverse
-#deb-src http://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted universe multiverse    
+#deb-src http://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted universe multiverse
 EOF
 }
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    func_apt_sources_switch
+fi

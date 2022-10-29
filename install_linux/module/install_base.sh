@@ -115,7 +115,7 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     test_has_installed() {
         declare -r COMMAND="wps"
         
-        echo "$(func_has_installed "${COMMAND}")"
+        func_has_installed "${COMMAND}"
     }
     
     test_has_installed

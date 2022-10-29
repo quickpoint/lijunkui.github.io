@@ -21,7 +21,7 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 fi
 
 @func_command_in_path() {
-    command -v "$@"
+    command -v "$@" &>/dev/null
 }
 export -f @func_command_in_path
 

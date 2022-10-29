@@ -34,7 +34,7 @@ source "${module_imports_dir}/../common/imports.sh"
 source "${module_imports_dir}/apt_commands.sh"
 
 #shellcheck source=/dev/null
-source "${module_imports_dir}/apt_sources_switcher.sh"
+source "${module_imports_dir}/apt_sources_switch.sh"
 
 #shellcheck source=/dev/null
 source "${module_imports_dir}/install_and_config_java.sh"

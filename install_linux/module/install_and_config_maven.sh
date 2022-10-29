@@ -46,9 +46,7 @@ func_install_maven() {
     
     declare -r SOFTWARE="maven"
     
-    @func_info "Installing ${SOFTWARE}..."
-    sudo apt-get install -y "${SOFTWARE}"
-    @func_info "Installing ${SOFTWARE}...Done"
+    func_apt_install "${SOFTWARE}"
 }
 
 func_config_maven_home() {
@@ -81,4 +79,3 @@ func_config_maven_mirror() {
     
     func_patch_on_key "${settings_patch}" "<mirrors>" "${mirror}" "${settings_path}"
 }
-

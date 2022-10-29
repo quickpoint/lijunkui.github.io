@@ -36,7 +36,7 @@ func_config_google_chrome_source_list() {
     wget -q -O - https://dl.google.com/linux/linux_signing_key.pub |
     sudo apt-key add -
     
-    func_apt_get_update
+    func_apt_get_refresh
 }
 
 func_install_google_chrome() {
