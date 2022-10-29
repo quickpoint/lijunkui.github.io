@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 #
-# @(#) test_func_sys.sh
-#
 # @author: quickpoint
-# @version: 1.0 2022-10-11
+# @version: 1.0
 #
 # Copyright (c) 2008-2022, quickpoint.
 #

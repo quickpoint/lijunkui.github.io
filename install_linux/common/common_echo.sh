@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 #
-# @(#) common_echo.sh
-#
 # @author: quickpoint
-# @version: 1.0 2022-10-11
+# @version: 1.0
 #
 # Copyright (c) 2008-2022, quickpoint.
 #
@@ -29,15 +27,15 @@ fi
         echo -e "${FUNCNAME[0]}: <color>  <prefix> <text>."
         exit 1
     fi
-
+    
     local color="$1"
     local prefix="$2"
     shift 2
     local text="$*"
-
+    
     local COLOR_BEGIN="\033[1;"
     local COLOR_END="\033[0m"
-
+    
     echo -e "${COLOR_BEGIN}${color}m${prefix} ${text}${COLOR_END}"
 }
 export -f @func_color_echo

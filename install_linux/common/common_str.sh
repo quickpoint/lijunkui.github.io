@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 #
-# @(#) common_str.sh
-#
 # @author: quickpoint
-# @version: 1.0 2022-10-11
+# @version: 1.0
 #
 # Copyright (c) 2008-2022, quickpoint.
 #
@@ -18,13 +16,13 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     ####### SCRIPT EXECUTION CONFIGURATION #######
     set -euo pipefail
     shopt -s globstar nullglob extglob
-
+    
     ###### PATH ######
     common_common_str_dir="$(
         cd "$(dirname "${BASH_SOURCE[0]}")"
         pwd -P
     )"
-
+    
     ###### IMPORTS ######
     #shellcheck source=/dev/null
     source "${common_common_str_dir}/common_echo.sh"
@@ -37,10 +35,10 @@ fi
         @func_error "${FUNCNAME[0]}: <string>"
         exit 1
     }
-
+    
     local var="$1"
     shift
-
+    
     [[ -z "${var}" ]]
 }
 export -f @func_str_is_empty
@@ -52,10 +50,10 @@ export -f @func_str_is_empty
         @func_error "${FUNCNAME[0]}: <string>"
         exit 1
     }
-
+    
     local var="$1"
     shift
-
+    
     [[ -n "${var}" ]]
 }
 export -f @func_str_is_not_empty
@@ -67,11 +65,11 @@ export -f @func_str_is_not_empty
         @func_error "${FUNCNAME[0]}: <string>"
         exit 1
     }
-
+    
     : "${1#"${1%%[![:space:]]*}"}"
     : "${_%"${_##*[![:space:]]}"}"
     printf '%s\n' "$_"
-
+    
     return 0
 }
 export -f @func_str_trim
@@ -84,7 +82,7 @@ export -f @func_str_trim
         @func_error "${FUNCNAME[0]}: <string1> <string2>"
         exit 1
     }
-
+    
     [[ "$1" == "$2" ]]
 }
 export -f @func_str_equals
@@ -97,11 +95,11 @@ export -f @func_str_equals
         @func_error "${FUNCNAME[0]}: <string> <substring>"
         exit 1
     }
-
+    
     local var="$1"
     local sub_string="$2"
     shift 2
-
+    
     [[ "${var}" == "${sub_string}"* ]]
 }
 export -f @func_str_starts
@@ -114,11 +112,11 @@ export -f @func_str_starts
         @func_error "${FUNCNAME[0]}: <string> <substring>"
         exit 1
     }
-
+    
     local var="$1"
     local sub_string="$2"
     shift 2
-
+    
     [[ "${var}" == *"${sub_string}" ]]
 }
 export -f @func_str_ends
@@ -131,11 +129,11 @@ export -f @func_str_ends
         @func_error "${FUNCNAME[0]}: <string> <regex>"
         exit 1
     }
-
+    
     local var="$1"
     local regex="$2"
     shift 2
-
+    
     [[ "${var}" =~ ${regex} ]]
 }
 export -f @func_str_regex_like

@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 #
-# @(#) common_sys.sh
-#
 # @author: quickpoint
-# @version: 1.0 2022-10-11
+# @version: 1.0
 #
 # Copyright (c) 2008-2022, quickpoint.
 #
@@ -37,9 +35,9 @@ export -f @func_sys_is_linux_os
 
 @func_sys_now() {
     local now
-
+    
     now="$(date "+%Y-%m-%d %H:%M:%S")"
-
+    
     echo "${now}"
 }
 export -f @func_sys_now

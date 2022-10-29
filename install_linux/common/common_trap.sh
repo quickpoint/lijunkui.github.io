@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 #
-# @(#) common_trap.sh
-#
 # @author: quickpoint
-# @version: 1.0 2022-10-11
+# @version: 1.0
 #
 # Copyright (c) 2008-2022, quickpoint.
 #
@@ -15,17 +13,17 @@
 ################################################################################
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-
+    
     ####### SCRIPT EXECUTION CONFIGURATION #######
     set -euo pipefail
     shopt -s globstar nullglob extglob
-
+    
     ###### PATH ######
     common_common_trap_dir="$(
         cd "$(dirname "${BASH_SOURCE[0]}")"
         pwd -P
     )"
-
+    
     ###### IMPORTS ######
     #shellcheck source=/dev/null
     source "${common_common_trap_dir}/common_file.sh"
@@ -36,7 +34,7 @@ fi
     local LASTLINE="$1" # line of error occurrence
     local LASTERR="$2"  # error code
     shift 2
-
+    
     echo -e "ERROR in ${JOB} : line ${LASTLINE} with exit code ${LASTERR}"
 }
 trap '@func_error_exit ${LINENO} ${?}' ERR
@@ -58,7 +56,7 @@ export -f @func_file_cache_add
             rm -rf "${file:?}"
         fi
     done
-
+    
     unset FILE_CACHE
 }
 export -f @func_file_cache_destroy

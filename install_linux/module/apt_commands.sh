@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
-###########################################################
-# @(#) apt_commands.sh
-# @author quickpoint
-# @version 1.0 2019-07-20
 #
-###########################################################
+# @author quickpoint
+# @version 1.0
+#
+# Copyright (c) 2008-2022, quickpoint.
+#
+# "THE FRIED-DUMPLING-WARE LICENSE", Version 1.0:
+# Quickpoint wrote this file.  As long as you retain this notice you
+# can do whatever you want with this stuff. If we meet some day, and you think
+# this stuff is worth it, you can buy me a fried-dumpling in return.
+#
+################################################################################
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     ####### SCRIPT EXECUTION CONFIGURATION #######
@@ -20,7 +26,7 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     ###### IMPORTS ######
     #shellcheck source=/dev/null
     source "${module_apt_commands_dir}/../common/imports.sh"
-
+    
     #shellcheck source=/dev/null
     source "${module_apt_commands_dir}/install_base.sh"
 fi
@@ -38,14 +44,14 @@ func_rm_apt_locks_if_exists() {
 func_rm_dpkg_locks_if_exists() {
     local LOCK_FRONTEND="/var/lib/dpkg/lock-frontend"
     func_safe_rm "${LOCK_FRONTEND}"
-
+    
     local LOCK="/var/lib/dpkg/lock"
     func_safe_rm "${LOCK}"
 }
 
 func_safe_rm() {
     local target="$*"
-
+    
     if [[ -f "${target}" ]]; then
         @func_info "removing ${target}"
         sudo rm "${target}"
