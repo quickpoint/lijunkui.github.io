@@ -45,18 +45,23 @@ func_has_installed() {
     return 1
 }
 
+func_has_not_installed() {
+    ! func_has_installed "$@"
+}
+
 func_step_run() {
-    if (($# != 2)); then
-        @func_error "${FUNCNAME[0]} <declare><cmd>"
+    if (($# < 2)); then
+        @func_error "${FUNCNAME[0]} <declare> <cmd> [<args>]"
         exit 1
     fi
     
     local declare="$1"
-    shift
-    local cmd="$*"
+    local cmd="$2"
+    shift 2
+    local args="$*"
     
     @func_warn "---------------${declare}---------------"
-    ${cmd} || @func_die
+    ${cmd} "${args}" || @func_die
 
     @func_info "${declare} done"
 }

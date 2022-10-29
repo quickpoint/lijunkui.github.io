@@ -45,7 +45,10 @@ func_install_java() {
     
     declare -r COMMAND="java"
     
-    declare -a PACKAGES=(default-jdk default-jdk-doc)
+    declare -a PACKAGES=(
+        default-jdk 
+        default-jdk-doc
+    )
     
     for each in "${PACKAGES[@]}"; do
         func_apt_install "${each}"
@@ -53,6 +56,7 @@ func_install_java() {
 }
 
 func_config_java() {
+
     local real_path
     real_path="$(@func_file_real_execute_path "java")"
     

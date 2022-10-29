@@ -32,7 +32,10 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 fi
 
 func_install_apt_softwares() {
-    declare -a TOOLS=(git curl snap)
+    declare -a TOOLS=(
+        git 
+        curl
+    )
     
     for each in "${TOOLS[@]}"; do
         

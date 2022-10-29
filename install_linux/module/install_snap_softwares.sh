@@ -2,9 +2,9 @@
 #
 # @author quickpoint
 # @version 1.0
-# 
+#
 # Copyright (c) 2008-2022, quickpoint.
-# 
+#
 # "THE FRIED-DUMPLING-WARE LICENSE", Version 1.0:
 # Quickpoint wrote this file.  As long as you retain this notice you
 # can do whatever you want with this stuff. If we meet some day, and you think
@@ -32,7 +32,17 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 fi
 
 func_install_snap_softwares() {
-    declare -a TOOLS=(intellij-idea-community pycharm-community)
+    
+    declare -r SNAP="snap"
+    
+    if func_has_not_installed "${SNAP}"; then
+        func_apt_install "${SNAP}"
+    fi
+    
+    declare -a TOOLS=(
+        intellij-idea-community
+        pycharm-community
+    )
     
     for each in "${TOOLS[@]}"; do
         

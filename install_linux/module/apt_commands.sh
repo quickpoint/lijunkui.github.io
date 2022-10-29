@@ -36,7 +36,7 @@ func_rm_locks_if_exists() {
         
         if [[ -f "${target}" ]]; then
             @func_info "removing ${target}"
-            @func_sys_rm "${target}"
+            sudo rm "${target}"
         fi
     }
     
@@ -87,7 +87,6 @@ func_apt_get_purge() {
     func_step_run "[PURGE]" 'func_apt_get_do_purge'
 }
 
-
 func_apt_get_uninstall_dup_images() {
     func_apt_get_do_uninstall_dup_images() {
         sudo dpkg --get-selections |
@@ -101,8 +100,6 @@ func_apt_get_uninstall_dup_images() {
     
     func_step_run "[IMAGE]" 'func_apt_get_do_uninstall_dup_images'
 }
-
-
 
 func_apt_get_refresh() {
     declare -a COMMANDS=(

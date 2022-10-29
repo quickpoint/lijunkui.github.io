@@ -2,9 +2,9 @@
 #
 # @author quickpoint
 # @version 1.0
-# 
+#
 # Copyright (c) 2008-2022, quickpoint.
-# 
+#
 # "THE FRIED-DUMPLING-WARE LICENSE", Version 1.0:
 # Quickpoint wrote this file.  As long as you retain this notice you
 # can do whatever you want with this stuff. If we meet some day, and you think
@@ -37,16 +37,19 @@ fi
 func_config_vscode_source_list() {
     local target="/etc/apt/sources.list.d/vscode.list"
     
-    if @func_file_not_exists "${target}"; then
-        sudo touch "${target}"
-        echo "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" >>"${target}"
+    if @func_file_exists "${target}"; then
+        return
     fi
+    
+    sudo touch "${target}"
+    
+    echo "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" >>"${target}"
     
     curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >microsoft.gpg
     
     sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
     
-    func_apt_source_refresh
+    func_apt_get_update
 }
 
 func_install_vscode() {
@@ -58,7 +61,7 @@ func_install_vscode() {
     
     func_config_vscode_source_list
     
-    sudo apt-get install code
+    func_apt_install code
     
     @func_info "Installing ${COMMAND}...Done"
 }
