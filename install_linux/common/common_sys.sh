@@ -40,3 +40,59 @@ export -f @func_sys_is_linux_os
     echo "${now}"
 }
 export -f @func_sys_now
+
+@func_sys_rm() {
+    if @func_sys_is_mac_os; then
+        brew remove "$@"
+    else
+        sudo rm "$@"
+    fi   
+}
+export -f @func_sys_rm
+
+@func_sys_update() {
+    if @func_sys_is_mac_os; then
+        brew update
+    else
+        sudo apt-get update
+    fi
+}
+export -f @func_sys_update
+
+@func_sys_upgrade() {
+    if @func_sys_is_mac_os; then
+        brew upgrade
+    else
+        sudo apt-get upgrade -y
+    fi
+}
+export -f @func_sys_upgrade
+
+@func_sys_dist_upgrade() {
+    if @func_sys_is_mac_os; then
+        brew upgrade
+    else
+        sudo apt-get dist-upgrade -y
+    fi
+}
+export -f @func_sys_dist_upgrade
+
+@func_sys_clean() {
+    if @func_sys_is_mac_os; then
+        brew cleanup --force -s
+    else
+        sudo apt-get autoclean
+        sudo apt-get autoremove
+        sudo apt-get clean
+    fi
+}
+export -f @func_sys_clean
+
+@func_sys_install() {
+    if @func_sys_is_mac_os; then
+        brew install "$@"
+    else
+        sudo apt-get install -y "$@"
+    fi
+}
+export -f @func_sys_install

@@ -2,9 +2,9 @@
 #
 # @author quickpoint
 # @version 1.0
-# 
+#
 # Copyright (c) 2008-2022, quickpoint.
-# 
+#
 # "THE FRIED-DUMPLING-WARE LICENSE", Version 1.0:
 # Quickpoint wrote this file.  As long as you retain this notice you
 # can do whatever you want with this stuff. If we meet some day, and you think
@@ -67,7 +67,7 @@ func_apt_install() {
     shift
     
     @func_info "Installing ${software}..."
-    sudo apt-get install -y "${software}"
+    @func_sys_install "${software}"
     @func_info "Installing ${software}...Done"
 }
 

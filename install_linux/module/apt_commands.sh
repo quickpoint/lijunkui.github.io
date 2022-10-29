@@ -2,9 +2,9 @@
 #
 # @author quickpoint
 # @version 1.0
-# 
+#
 # Copyright (c) 2008-2022, quickpoint.
-# 
+#
 # "THE FRIED-DUMPLING-WARE LICENSE", Version 1.0:
 # Quickpoint wrote this file.  As long as you retain this notice you
 # can do whatever you want with this stuff. If we meet some day, and you think
@@ -53,32 +53,24 @@ func_safe_rm() {
     
     if [[ -f "${target}" ]]; then
         @func_info "removing ${target}"
-        sudo rm "${target}"
+        @func_sys_rm "${target}"
     fi
 }
 
 func_apt_get_update() {
-    func_step_run "[UPDATE]" 'sudo apt-get update'
+    func_step_run "[UPDATE]" '@func_sys_update'
 }
 
 func_apt_get_upgrade() {
-    func_step_run "[UPDATE]" 'sudo apt-get upgrade -y'
+    func_step_run "[UPDATE]" '@func_sys_upgrade'
 }
 
 func_apt_get_dist_upgrade() {
-    func_step_run "[DIST-UPDATE]" 'sudo apt-get dist-upgrade -y'
-}
-
-func_apt_get_auto_remove() {
-    func_step_run "[CLEAN]" 'sudo apt-get autoremove'
-}
-
-func_apt_get_auto_clean() {
-    func_step_run "[CLEAN]" 'sudo apt-get autoclean'
+    func_step_run "[DIST-UPDATE]" '@func_sys_dist_upgrade'
 }
 
 func_apt_get_clean() {
-    func_step_run "[CLEAN]" 'sudo apt-get clean'
+    func_step_run "[CLEAN]" '@func_sys_clean'
 }
 
 func_apt_get_purge() {
@@ -110,8 +102,6 @@ func_apt_get_refresh() {
         func_apt_get_update
         func_apt_get_upgrade
         func_apt_get_dist_upgrade
-        func_apt_get_auto_remove
-        func_apt_get_auto_clean
         func_apt_get_clean
         func_apt_get_purge
         func_apt_get_uninstall_dup_images

@@ -64,3 +64,4 @@ func_install_poetry() {
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     func_install_python_related
+fi
