@@ -28,20 +28,29 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     source "${bin_run_dir}/../module/imports.sh"
     
     func_main() {
-        func_step_run "[APT REFRSH]" 'func_apt_get_refresh'
-        #func_step_run "[APT SWITCH]" 'func_apt_sources_switch'
-        func_step_run "[INSTALL TOOLS]" 'func_install_apt_softwares'
-        func_step_run "[INSTALL VIM]" 'func_install_vim'
-        func_step_run "[INSTALL CHROME]" 'func_install_google_chrome'
-        func_step_run "[INSTALL VSCODE]" 'func_install_vscode'
-        func_step_run "[INSTALL IM]" 'func_install_input_method'
-        func_step_run "[INSTALL DEB]" 'func_install_deb_software'
-        func_step_run "[INSTALL FONTS]" 'func_install_fonts'
+
+        # local force="-y"
+        local force="-n"
+
+        if (($# == 1)); then
+            force="$1"
+            shift
+        fi
+
+        func_step_run "[APT REFRSH]" "func_apt_get_refresh"
+        #func_step_run "[APT SWITCH]" "func_apt_sources_switch"
+        func_step_run "[INSTALL TOOLS]" "func_install_apt_softwares" "${force}" 
+        func_step_run "[INSTALL VIM]" "func_install_vim" "${force}"
+        func_step_run "[INSTALL CHROME]" "func_install_google_chrome" "${force}"
+        func_step_run "[INSTALL VSCODE]" "func_install_vscode" "${force}"
+        func_step_run "[INSTALL IM]" "func_install_input_method" "${force}"
+        func_step_run "[INSTALL DEB]" "func_install_deb_software" "${force}"
+        func_step_run "[INSTALL FONTS]" "func_install_fonts" "${force}"
         
-        func_step_run "[INSTALL JAVA]" 'func_install_and_config_java'
-        func_step_run "[INSTALL MAVEN]" 'func_install_and_config_maven'
-        func_step_run "[INSTALL PYTHON]" 'func_install_python_related'
-        func_step_run "[INSTALL SNAP_SOFTWARES]" 'func_install_snap_softwares'
+        func_step_run "[INSTALL JAVA]" "func_install_and_config_java" "${force}"   
+        func_step_run "[INSTALL MAVEN]" "func_install_and_config_maven" "${force}"
+        func_step_run "[INSTALL PYTHON]" "func_install_python_related" "${force}"
+        func_step_run "[INSTALL SNAP_SOFTWARES]" "func_install_snap_softwares" "${force}"
     }
     
     # the script main entry.

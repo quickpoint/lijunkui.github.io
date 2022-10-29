@@ -53,9 +53,13 @@ func_config_vscode_source_list() {
 }
 
 func_install_vscode() {
+
+    local shift="$1"
+    shift
+
     declare -r COMMAND="code"
     
-    func_has_installed "${COMMAND}" && return
+    func_has_installed "${COMMAND}" "${force}" && return
     
     @func_info "Installing ${COMMAND}..."
     
@@ -67,5 +71,5 @@ func_install_vscode() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    func_install_vscode
+    func_install_vscode "-y"
 fi

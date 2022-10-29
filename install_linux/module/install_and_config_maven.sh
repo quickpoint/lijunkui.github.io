@@ -35,9 +35,16 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 fi
 
 func_install_and_config_maven() {
+     local force=""
+
+    if (($# == 1)); then
+        force="$1"
+        shift
+    fi
+
     declare -r COMMAND="mvn"
     
-    func_has_installed "${COMMAND}" && return
+    func_has_installed "${COMMAND}" "${force}" && return
     
     func_step_run "[INSTALL MAVEN]" 'func_install_maven'
     func_step_run "[CONFIG MAVEN_HOME]" 'func_config_maven_home'

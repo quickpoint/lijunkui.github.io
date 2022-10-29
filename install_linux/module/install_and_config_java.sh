@@ -31,16 +31,6 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     source "${module_config_dir}/install_base.sh"
 fi
 
-func_install_and_config_java() {
-    declare -r COMMAND="java"
-    
-    func_has_installed "${COMMAND}" && return
-    
-    func_step_run "[INSTALL JAVA]" 'func_install_java'
-    
-    func_step_run "[CONFIG JAVA_HOME]" 'func_config_java'
-}
-
 func_install_java() {
     
     declare -r COMMAND="java"
@@ -68,6 +58,24 @@ func_config_java() {
     func_patch_if_not_exists "${HOME}/.profile" "JAVA_HOME" "${line}"
 }
 
+func_install_and_config_java() {
+    local force=""
+
+    if (($# == 1)); then
+        force="$1"
+        shift
+    fi
+
+    declare -r COMMAND="java"
+    
+    func_has_installed "${COMMAND}" "${force}" && return
+    
+    func_step_run "[INSTALL JAVA]" 'func_install_java'
+    
+    func_step_run "[CONFIG JAVA_HOME]" 'func_config_java'
+}
+
+
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    func_install_and_config_java
+    func_install_and_config_java "-y"
 fi

@@ -51,9 +51,17 @@ func_config_google_chrome_source_list() {
 }
 
 func_install_google_chrome() {
+
+    local force=""
+    
+    if (($# == 1)); then
+        force="$1"
+        shift
+    fi
+    
     declare -r COMMAND="google-chrome"
     
-    func_has_installed "${COMMAND}" && return
+    func_has_installed "${COMMAND}" "${force}" && return
     
     func_config_google_chrome_source_list
     
@@ -63,5 +71,5 @@ func_install_google_chrome() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    func_install_google_chrome
+    func_install_google_chrome "-y"
 fi

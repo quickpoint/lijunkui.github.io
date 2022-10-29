@@ -33,9 +33,12 @@ fi
 
 func_install_snap_softwares() {
     
+    local force="$1"
+    shift
+
     declare -r SNAP="snap"
     
-    if func_has_not_installed "${SNAP}"; then
+    if func_has_not_installed "${SNAP}" "${force}"; then
         func_apt_install "${SNAP}"
     fi
     
@@ -46,7 +49,7 @@ func_install_snap_softwares() {
     
     for each in "${TOOLS[@]}"; do
         
-        if func_has_installed "${each}"; then
+        if func_has_installed "${each}" "${force}"; then
             continue
         fi
         
@@ -55,5 +58,5 @@ func_install_snap_softwares() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    func_install_snap_softwares
+    func_install_snap_softwares "-y"
 fi

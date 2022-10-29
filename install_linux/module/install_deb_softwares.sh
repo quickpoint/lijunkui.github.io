@@ -39,6 +39,13 @@ fi
 
 func_install_deb_software() {
     
+    local force=""
+    
+    if (($# == 1)); then
+        force="$1"
+        shift
+    fi
+    
     local SOFTWARE="/media/quickpoint/resource/linuxsf"
     
     local file
@@ -46,28 +53,29 @@ func_install_deb_software() {
         @func_info "Installing deb software: ${file}..."
         
         if @func_str_regex_like "${file}" "netease*"; then
-            func_install_netease_music "${file}"
+            func_install_netease_music "${file}" "${force}"
             func_fix_netease_music
             continue
         fi
         
         if @func_str_regex_like "${file}" "wps*"; then
-            func_install_wps "${file}"
+            func_install_wps "${file}" "${force}"
             func_install_wps_fonts
             continue
         fi
         
-        func_dpkg_install "${file}"
+        func_dpkg_install "${file}" "${force}"
     done
 }
 
 func_install_wps() {
     local file="$1"
-    shift
+    local force="$2"
+    shift 2
     
     declare -r COMMAND="wps"
     
-    func_has_installed "${COMMAND}" && return
+    func_has_installed "${COMMAND}" "${force}" && return
     
     func_dpkg_install "${COMMAND}" "${file}"
 }
@@ -90,11 +98,12 @@ func_install_wps_fonts() {
 
 func_install_netease_music() {
     local file="$1"
-    shift
+    local force="$2"
+    shift 2
     
     declare -r COMMAND="netease-cloud-music"
     
-    func_has_installed "${COMMAND}" && return
+    func_has_installed "${COMMAND}" "${force}"&& return
     
     func_dpkg_install "${COMMAND}" "${file}"
 }

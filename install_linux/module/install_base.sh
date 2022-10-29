@@ -35,8 +35,25 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 fi
 
 func_has_installed() {
-    local command="$1"
+
+    local command=""
+    local forced=""
     
+    if (($# == 1)); then 
+        command="$1"
+        shift
+    fi
+
+    if (($# == 2)); then
+        command="$1"
+        forced="$2"
+        shift 2
+    fi
+
+    if @func_str_equals "${forced}" "-y"; then
+        return 1
+    fi
+
     if @func_command_in_path "${command}"; then
         @func_warn "${command} has already been installed."
         return 0

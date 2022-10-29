@@ -32,22 +32,37 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 fi
 
 func_install_python_related() {
-    func_install_pip3_if_not_exists
-    func_install_pip3_packages
-    func_install_pip3_softwares
-    func_install_poetry
+
+    local force=""
+
+    if (($# == 1)); then
+        force="$1"
+        shift
+    fi
+
+    func_install_pip3_if_not_exists "${force}"
+    func_install_pip3_packages "${force}"
+    func_install_pip3_softwares "${force}"
+    func_install_poetry "${force}"
 }
 
 func_install_pip3_if_not_exists() {
+    local force="$1"
+    shift
+
     declare -r COMMAND="pip3"
     declare -r SOFTWARE="python3-pip"
     
-    if func_has_not_installed "${COMMAND}"; then
+    if func_has_not_installed "${COMMAND}" "${force}"; then
         func_apt_install "${SOFTWARE}"
     fi
 }
 
 func_install_pip3_packages() {
+
+    local force="$1"
+    shift
+
     declare -a PIP3_PACKAGES=(
         pandas
         numpy
@@ -56,12 +71,16 @@ func_install_pip3_packages() {
         sklearn
     )
     
-    for each in "${PIP3_PACKAGES[@]}"; do
+    for each in "${PIP3_PACKAGES[@]}" "${force}"; do
         func_pip3_install "${each}"
     done
 }
 
 func_install_pip3_softwares() {
+
+    local force="$1"
+    shift 
+
     declare -a PIP3_SOFTWARES=(
         jupyter
         black
@@ -74,16 +93,19 @@ func_install_pip3_softwares() {
     )
     
     for each in "${PIP3_SOFTWARES[@]}"; do       
-        if func_has_not_installed "${each}"; then
+        if func_has_not_installed "${each}" "${force}"; then
             func_pip3_install "${each}"
         fi
     done
 }
 
 func_install_poetry() {
+    local force="$1"
+    shift
+
     declare -r COMMAND="poetry"
     
-    func_has_installed "${COMMAND}" && return
+    func_has_installed "${COMMAND}" "${force}" && return
     
     @func_info "Installing ${COMMAND}..."
     curl -sSL https://install.python-poetry.org | python3 -
@@ -91,5 +113,5 @@ func_install_poetry() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    func_install_python_related
+    func_install_python_related "-y"
 fi
